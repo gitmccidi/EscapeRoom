@@ -5,37 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <title>Druk F11</title>
 
-    <script type="text/javascript">
-        var version = 1;
-        var time = 3600;
-
-        //Welkom bericht
-        console.log("Dit is het scherm waarmee je de klok start en tips geeft V(" + version +")");
-        console.log("-De klok:");
-        console.log("   Typ start() en hij telt af van 10min");
-        console.log("   Typ start(tijdInSeconden) voor een andere tijd");
-        console.log("-De Tips:");
-        console.log("   Typ schrijf(\"tip\"), je tip moet tussen aanhalingstekens");
-        console.log("   Vb: schrijf(\"hallo!\")");
-
-
-        function schrijf(tip){
-          document.getElementById("tip").innerHTML = tip;
-        }
-        function start(itime=time){
-          time = itime;
-          loop();
-        }
-
-        var loop = function (){
-            document.getElementById("clock").innerHTML = time;
-            console.log(time);
-            time--;
-            if (time > 0) {
-              setTimeout(loop, 1000);
-            }
-        }
-    </script>
+    <script src="script.js" charset="utf-8"></script>
 
     <style media="screen">
       html {
@@ -49,7 +19,6 @@
         background-image: linear-gradient(to right,red,black);
       }
       h2 {
-        color: white;
         font-weight: bold;
         font-size: 7em;
       }
@@ -59,7 +28,7 @@
   <body>
     <center>
       <h1 id="tip"><b>Druk CTRL + SHIFT + I</b></h1>
-      <h2 id="clock">(in Chrome op pc)</h2>
+      <h2 id="clock" style="color:white">(in Chrome op pc en ga naar console)</h2>
     </center>
 
   </body>
