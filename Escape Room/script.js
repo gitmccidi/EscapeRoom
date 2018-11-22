@@ -2,21 +2,32 @@ var version = 1;
 var time = 3600;
 var seconds = 0;
 var latency = 1000;
+var running = false;
 
 //Welkom bericht
 console.log("Dit is het scherm waarmee je de klok start en tips geeft V(" + version +")");
 console.log("-De klok:");
 console.log("   Typ start() en hij telt af van 10min");
 console.log("   Typ start(tijdInSeconden) voor een andere tijd");
+console.log("   Typ pause() voor te pauzeren");
+console.log("   Typ pause() opnieuw voor terug te starten")
 console.log("-De Tips:");
 console.log("   Typ schrijf(\"tip\"), je tip moet tussen aanhalingstekens");
 console.log("   Vb: schrijf(\"hallo!\")");
+console.log("   Typ schrijf(\"tip\#,grootte) voor de grootte aan te passen");
+console.log("   grootte moet een getal zijn \(zonder \"\"\)");
 
 
-function schrijf(tip){
+function schrijf(tip,grootte=8){
   document.getElementById("tip").innerHTML = tip;
+  if (typeof grootte === 'string'){
+     document.getElementById("tip").style.fontSize = grootte;
+  } else {
+  document.getElementById("tip").style.fontSize = grootte.toString()+"em";
+  }
 }
 function start(itime=time){
+  running = true;
   time = itime;
   loop();
 }
@@ -32,6 +43,14 @@ function specialEffects(){
     }
 }
 
+function pause(){
+   running = !running;
+   if (running){ 
+      loop();
+   }
+}
+
+
 var loop = function (){
   seconds = time%60;
   if (seconds<10){
@@ -41,7 +60,7 @@ var loop = function (){
   console.log(time);
   time--;
   specialEffects();
-  if (time > 0) {
+  if (time > 0 && running) {
       setTimeout(loop, latency);
   }
 }
