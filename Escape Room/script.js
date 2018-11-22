@@ -1,8 +1,9 @@
-var version = 1;
-var time = 3600;
+var version = 1.4;
+var time = 600;
 var seconds = 0;
 var latency = 1000;
 var running = false;
+
 
 //Welkom bericht
 console.log("Dit is het scherm waarmee je de klok start en tips geeft V(" + version +")");
@@ -27,6 +28,8 @@ function schrijf(tip,grootte=8){
   }
 }
 function start(itime=time){
+  document.getElementById("clock").style.fontSize = "9em";
+
   running = true;
   time = itime;
   loop();
@@ -37,7 +40,6 @@ function specialEffects(){
       if (document.getElementById("clock").style.color == "red") {
         document.getElementById("clock").style.color = "white"
       } else {
-        console.log("else");
         document.getElementById("clock").style.color = "red"
       }
     }
@@ -45,7 +47,7 @@ function specialEffects(){
 
 function pause(){
    running = !running;
-   if (running){ 
+   if (running){
       loop();
    }
 }
@@ -57,7 +59,6 @@ var loop = function (){
     seconds = "0"+seconds
   }
   document.getElementById("clock").innerHTML = Math.floor(time/60) + ":" + seconds;
-  console.log(time);
   time--;
   specialEffects();
   if (time > 0 && running) {
