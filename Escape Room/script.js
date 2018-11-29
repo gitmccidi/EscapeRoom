@@ -17,7 +17,13 @@ console.log("   Typ schrijf(\"tip\"), je tip moet tussen aanhalingstekens");
 console.log("   Vb: schrijf(\"hallo!\")");
 console.log("   Typ schrijf(\"tip\#,grootte) voor de grootte aan te passen");
 console.log("   grootte moet een getal zijn \(zonder \"\"\)");
+var heartbeat = new Audio('heartbeat.wav');
 
+
+var playSound = function (){
+  heartbeat.play();
+  setTimeout(playSound, heartbeat.duration);
+}
 
 function schrijf(tip,grootte=8){
   document.getElementById("tip").innerHTML = tip;
