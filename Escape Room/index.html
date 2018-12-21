@@ -1,36 +1,66 @@
-<html lang="nl" dir="ltr"><head>
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave" rel="stylesheet">
-    <title>Druk F11</title>
-    <script src="script.js" charset="utf-8"></script>
+<html lang="nl" dir="ltr">
 
-    <style media="screen">
-      html {
-        font-family: 'Sedgwick Ave', cursive;
-      }
-      h1#tip {
-        color: white;
-        font-size: 8em;
-      }
-      html{
-        background-image: url("https://image.shutterstock.com/image-photo/teddy-bear-sitting-haunted-housescary-260nw-465151163.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-      }
-      h2 {
-        position: fixed;
-        top: 380px;
-        right: 520px;
-        font-weight: bold;
-        font-size: 6em;
-      }
-    </style>
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Sedgwick+Ave" rel="stylesheet">
+  <title>Druk F11</title>
+  <script src="script.js" charset="utf-8"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBUxeuKRCLpCFGKmHjnS6Rl6OM037HIe1g",
+      authDomain: "steammaaseik.firebaseapp.com",
+      databaseURL: "https://steammaaseik.firebaseio.com",
+      projectId: "steammaaseik",
+      storageBucket: "steammaaseik.appspot.com",
+      messagingSenderId: "865102663406"
+    };
+    if (window.navigator.onLine) {
+      firebase.initializeApp(config);
+      var database = firebase.database();
+      console.log("Firebase is geladen!")
+    } else {
+      var offlineMessage = () => console.log("--Offline! (Gebruik NIET autoDB())--");
+      setTimeout(offlineMessage, 800)
+    }
+  </script>
 
-  </head>
-  <body>
-    <center>
-      <h1 id="tip" style="font-size: 6em;">De sleutel licht onder de kast</h1>
-      <h2 id="clock" style="color: white; font-size: 9em;">0:01</h2>
-    </center>
-	
-</body></html>
+  <style media="screen">
+    html {
+      font-family: 'Sedgwick Ave', cursive;
+    }
+
+    h1#tip {
+      color: white;
+      font-size: 8em;
+    }
+
+    html {
+      background-image: url("https://image.shutterstock.com/image-photo/teddy-bear-sitting-haunted-housescary-260nw-465151163.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    h2 {
+      position: fixed;
+      top: 380px;
+      right: 520px;
+      font-weight: bold;
+      font-size: 6em;
+    }
+  </style>
+
+</head>
+
+<body>
+  <center>
+    <h1 id="tip" style="font-size: 6em;">De sleutel licht onder de kast</h1>
+    <h2 id="clock" style="color: white; font-size: 9em;">0:01</h2>
+  </center>
+
+</body>
+
+</html>
