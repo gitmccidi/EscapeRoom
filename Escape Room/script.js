@@ -1,9 +1,17 @@
 var version = 2.1;
+var startTime = 3600;
 var time = 3600;
 var seconds = 0;
 var latency = 1000;
 var running = false;
 var username = "anonymous";
+var aantalTips = 0;
+var bonusTijd = 0;
+//Animation
+var alpha = 0;
+var fadeOut = false;
+var footerHeight = 5;
+
 
 //get Date
 var today = new Date();
@@ -25,6 +33,19 @@ var objectDB = {
 	parsedDate: today,
 	time: 0
 }
+
+function move() {
+	var elem = document.getElementById("myBar");
+	var id = setInterval(frame, 50);
+	function frame() {
+		if (time / startTime >= 100) {
+			clearInterval(id);
+		} else {
+			elem.style.width = time / startTime * 100 + '%';
+		}
+	}
+}
+
 
 setTimeout(info, 1000)
 
@@ -54,16 +75,53 @@ var playSound = function () {
 }
 
 function schrijf(tip, grootte = 8) {
+	aantalTips++;
+	console.log("Totaal aantal tips: " + aantalTips);
+
 	document.getElementById("tip").innerHTML = tip;
 	if (typeof grootte === 'string') {
 		document.getElementById("tip").style.fontSize = grootte;
 	} else {
 		document.getElementById("tip").style.fontSize = grootte.toString() + "em";
 	}
+
+	alpha = 0.2;
+	fadeOut = false;
+	footerHeight = 5;
+
+	var popupInterval = setInterval(redPopup, 10)
+	function redPopup() {
+		if (fadeOut) {
+			alpha -= 0.02;
+			if (footerHeight > 0) {
+				footerHeight -= 15;
+			}
+			if (alpha < 0.05) {
+				alpha = 0;
+				document.getElementById("myProgress").style.display = "flex"
+				clearInterval(popupInterval)
+				document.getElementById("myProgress").style.color = "rgba(0, 128, 0, 0.3)";
+			}
+		} else {
+			alpha += 0.02;
+			if (footerHeight < 100) {
+				footerHeight += 15;
+			}
+		}
+		if (alpha >= 1) {
+			fadeOut = true;
+		}
+		document.getElementById("myFooter").style.height = footerHeight + "%";
+		document.getElementById("myFooter").style.backgroundColor = "rgba(255, 0, 0," + alpha + ")";
+		document.getElementById("myProgress").style.color = "rgba(255, 0, 0," + alpha + ")";
+
+	}
 }
 function start(iUsername = "anonymous", itime = time) {
 	username = iUsername;
 	document.getElementById("clock").style.fontSize = "9em";
+	startTime = itime;
+	move();
 
 	running = true;
 	time = itime;
@@ -72,7 +130,11 @@ function start(iUsername = "anonymous", itime = time) {
 
 
 function specialEffects() {
-	if (time < 60) {
+	if (time / startTime < 0.3) {
+		document.getElementById("myBar").style.backgroundColor = "rgba(255, 166, 0, 0.3)";
+	}
+	if (time / startTime < 0.10) {
+		document.getElementById("myBar").style.backgroundColor = "rgba(255, 0, 0, 0.3)";
 		if (document.getElementById("clock").style.color == "red") {
 			document.getElementById("clock").style.color = "white"
 		} else {
@@ -88,6 +150,29 @@ function pause() {
 	}
 }
 
+function bonus(bonusTijd = false) {
+	if (bonusTijd) {
+		document.getElementById("clock").style.color = "green";
+		var bonusInterval = setInterval(addSeconds, 50)
+	} else {
+		console.log("Typ bonus(tijdInSeconden), bv: bonus(60) voor 60 bonus seconden.");
+	}
+
+	function addSeconds() {
+		time++;
+		bonusTijd--;
+		seconds = time % 60;
+		if (seconds < 10) {
+			seconds = "0" + seconds
+		}
+		document.getElementById("clock").innerHTML = Math.floor(time / 60) + ":" + seconds;
+		if (bonusTijd <= 0){
+			document.getElementById("clock").style.color = "white";
+			clearInterval(bonusInterval);
+		}
+	}
+}
+
 function finish(veranderTip = true) {
 	if (running) {
 		pause();
@@ -99,13 +184,14 @@ function finish(veranderTip = true) {
 		document.getElementById("tip").style.color = "green";
 		document.getElementById("tip").style.fontWeight = "bolder";
 	}
-	if(window.localStorage.getItem("DB") == null){
+	if (window.localStorage.getItem("DB") == null) {
 		window.localStorage.setItem("DB") == "";
 	}
 	window.localStorage.setItem("DB", window.localStorage.getItem("DB") + username + ":\t" + time + "\n");
 	console.log("Geschreven naar DB:\n" + window.localStorage.getItem("DB"))
 	objectDB.time = time;
 	objectDB.username = username;
+	objectDB.tips = aantalTips;
 	var JSONDB = window.localStorage.getItem("jsonDB")
 	if (JSONDB == null) {
 		JSONDB = "";
@@ -138,7 +224,7 @@ function autoDB() {
 		firebase.database().ref('/leaderboard').once('value').then(function (snapshot) {
 			console.log(snapshot);
 			oldDB = JSON.stringify(snapshot.val());
-			var oldDB = oldDB.slice(0, oldDB.length - 1) +  ",";
+			var oldDB = oldDB.slice(0, oldDB.length - 1) + ",";
 			var updatedDB = oldDB + newDB + "]";
 			var downloadName = "escaperoomLeaderboard(" + todayDB + ").json";
 			alert("If you have succesfully updated the database, please type clearDB(true)")
